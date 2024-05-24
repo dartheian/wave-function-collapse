@@ -17,7 +17,7 @@ class Wave:
         return self.possible.shape[:-1]
 
     @property
-    def states_number(self):
+    def state_set_cardinality(self):
         return self.counts.size
 
     @property
@@ -30,7 +30,7 @@ class Wave:
 
     @property
     def entropy(self):
-        return entropy(self.density, base=self.states_number, axis=-1)
+        return entropy(self.density, base=self.state_set_cardinality, axis=-1)
 
     @property
     def min_entropy(self):
@@ -53,7 +53,7 @@ class Wave:
         self.possible[*position, state] = 1
 
     def observe(self, position):
-        state = self.rng.choice(self.states_number, p=self.density[position])
+        state = self.rng.choice(self.state_set_cardinality, p=self.density[position])
         self.fix(position, state)
 
     def fix(self, position, state):
@@ -132,7 +132,11 @@ def run(seed):
     return wave
 
 
-wave = run(1)
-v = stack(v)
-e = stack(e)
-d = stack(d)
+# wave = run(1)
+# v = stack(v)
+# e = stack(e)
+# d = stack(d)
+
+
+rng = default_rng(0)
+wave = SudokuWave.from_file("data.csv", rng)
